@@ -550,7 +550,7 @@ Built with:
 
 ---
 
-**Questions?** Open an issue or discussion on [GitHub](https://github.com/yourusername/aegis-ai).
+**Questions?** Open an issue or discussion on [GitHub](https://github.com/adetorodev/aegis-ai).
 
 **Ready to get started?** See [Quick Start](#quick-start) above.
 
