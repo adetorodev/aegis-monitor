@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aegis-ai"
+name = "aegis-monitor"
 version = "0.1.0"
 description = "A unified LLM evaluation, cost monitoring, and governance framework"
 readme = "README.md"
@@ -53,7 +53,7 @@ docs = [
     "mkdocs-material>=9.0.0",
 ]
 all = [
-    "aegis-ai[openai,anthropic,scoring,dev,docs]",
+    "aegis-monitor[openai,anthropic,scoring,dev,docs]",
 ]
 
 [project.scripts]
