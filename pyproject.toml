@@ -21,6 +21,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Testing",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -60,8 +62,9 @@ all = [
 aegis = "aegis.cli.main:app"
 
 [project.urls]
-Homepage = "https://github.com/aegis-ai/aegis-ai"
-Documentation = "https://docs.aegis-ai.dev"
+Homepage = "https://adetorodev.github.io/aegis-ai"
+Github = "https://github.com/aegis-ai"
+Documentation = "https://adetorodev.github.io/aegis-ai/FULL_DOCUMENTATION.html"
 Repository = "https://github.com/aegis-ai/aegis-ai"
 "Bug Tracker" = "https://github.com/aegis-ai/aegis-ai/issues"
 
