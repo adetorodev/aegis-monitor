@@ -1,4 +1,4 @@
-"""Tests for Phase 5: Model comparison and Anthropic adapter."""
+"""Model comparison and Anthropic adapter."""
 
 from unittest.mock import AsyncMock, MagicMock, patch
 

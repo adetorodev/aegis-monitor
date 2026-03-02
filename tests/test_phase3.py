@@ -1,4 +1,4 @@
-"""Tests for Phase 3 features: semantic, composite scoring, and regression."""
+"""semantic, composite scoring, and regression."""
 
 import pytest
 

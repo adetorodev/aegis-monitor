@@ -1,6 +1,6 @@
-# Aegis AI Documentation
+# Aegis Monitor Documentation
 
-Welcome to the Aegis AI documentation portal.
+Welcome to the Aegis Monitor documentation portal.
 
 ## Start Here
 

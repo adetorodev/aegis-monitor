@@ -1,8 +1,8 @@
-# Aegis AI Architecture
+# Aegis Monitor Architecture
 
 ## Overview
 
-Aegis AI is designed using a modular, pluggable architecture that allows users to:
+Aegis Monitor is designed using a modular, pluggable architecture that allows users to:
 1. Evaluate LLM outputs against expected values
 2. Track costs per evaluation
 3. Compare multiple models

@@ -1,4 +1,4 @@
-"""Integration test for Phase 3 baseline and regression features."""
+"""Integration test for baseline and regression features."""
 
 import pytest
 from pathlib import Path

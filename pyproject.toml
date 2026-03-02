@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aegis-ai"
+name = "aegis-monitor"
 version = "0.1.0"
 description = "A unified LLM evaluation, cost monitoring, and governance framework"
 readme = "README.md"
@@ -21,6 +21,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Software Development :: Testing",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
@@ -53,15 +55,16 @@ docs = [
     "mkdocs-material>=9.0.0",
 ]
 all = [
-    "aegis-ai[openai,anthropic,scoring,dev,docs]",
+    "aegis-monitor[openai,anthropic,scoring,dev,docs]",
 ]
 
 [project.scripts]
 aegis = "aegis.cli.main:app"
 
 [project.urls]
-Homepage = "https://github.com/aegis-ai/aegis-ai"
-Documentation = "https://docs.aegis-ai.dev"
+Homepage = "https://adetorodev.github.io/aegis-ai"
+Github = "https://github.com/aegis-ai"
+Documentation = "https://adetorodev.github.io/aegis-ai/FULL_DOCUMENTATION.html"
 Repository = "https://github.com/aegis-ai/aegis-ai"
 "Bug Tracker" = "https://github.com/aegis-ai/aegis-ai/issues"
 

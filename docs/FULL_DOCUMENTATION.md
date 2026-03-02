@@ -1,10 +1,10 @@
 # Full Documentation
 
-This document is the complete high-level reference for Aegis AI.
+This document is the complete high-level reference for Aegis Monitor.
 
-## 1. What Aegis AI Solves
+## 1. What Aegis Monitor Solves
 
-Aegis AI helps teams evaluate model output quality, monitor costs, compare models, and detect regressions in production-oriented workflows.
+Aegis Monitor helps teams evaluate model output quality, monitor costs, compare models, and detect regressions in production-oriented workflows.
 
 ## 2. System Modules
 

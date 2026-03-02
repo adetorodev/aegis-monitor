@@ -1,4 +1,4 @@
-"""Integration tests for CLI commands - Phase 6 hardening."""
+"""Integration tests for CLI commands - hardening."""
 
 import json
 import tempfile

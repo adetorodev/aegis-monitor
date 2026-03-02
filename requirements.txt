@@ -1,5 +1,6 @@
 # Aegis AI - Core Dependencies
 # Install with: pip install -r requirements.txt
+# Or directly: pip install aegis-monitor
 
 # CLI framework
 typer>=0.9.0
