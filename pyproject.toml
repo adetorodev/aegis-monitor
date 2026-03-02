@@ -5,12 +5,16 @@ build-backend = "hatchling.build"
 [project]
 name = "aegis-monitor"
 version = "0.1.0"
-description = "A unified LLM evaluation, cost monitoring, and governance framework"
+description = "Python library for LLM evaluation, observability, and cost monitoring. It helps teams measure model quality, track prompt performance, detect regressions, and monitor real-time 
+token usage and spending across providers like OpenAI, Anthropic, and Google.
+
+The library provides structured experiment tracking, automated benchmark evaluation, hallucination and bias scoring, latency monitoring, and budget enforcement—all in one lightweight SDK. Aegis-AI integrates seamlessly into existing ML pipelines and CI/CD workflows, 
+enabling teams to ship AI systems that are measurable, reliable, and financially predictable."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-    { name = "Aegis AI Team", email = "team@aegis-ai.dev" }
+    { name = "Ezekiel A. Adetoro", email = "adetoroe787@gmail.com" }
 ]
 keywords = ["llm", "evaluation", "cost-monitoring", "ai-governance", "testing"]
 classifiers = [
@@ -62,11 +66,11 @@ all = [
 aegis = "aegis.cli.main:app"
 
 [project.urls]
-Homepage = "https://adetorodev.github.io/aegis-ai"
-Github = "https://github.com/aegis-ai"
-Documentation = "https://adetorodev.github.io/aegis-ai/FULL_DOCUMENTATION.html"
-Repository = "https://github.com/aegis-ai/aegis-ai"
-"Bug Tracker" = "https://github.com/aegis-ai/aegis-ai/issues"
+Homepage = "https://adetorodev.github.io/aegis-monitor"
+Github = "https://github.com/adetorodev/aegis-monitor"
+Documentation = "https://adetorodev.github.io/aegis-monitor/FULL_DOCUMENTATION.html"
+Repository = "https://github.com/adetorodev/aegis-monitor"
+"Bug Tracker" = "https://github.com/adetorodev/aegis-monitor/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["aegis"]
