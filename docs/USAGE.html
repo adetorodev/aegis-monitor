@@ -1,52 +1,117 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>USAGE - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Usage Guide</h1>
-<p>This guide covers day-to-day use of Aegis AI from install to evaluation workflows.</p>
-<h2>1) Installation</h2>
-<h3>Base install</h3>
-<pre><code>pip install aegis-ai</code></pre>
-<h3>Development install (from source)</h3>
-<pre><code>git clone https://github.com/aegis-ai/aegis-ai
-cd aegis-ai
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"</code></pre>
-<h3>Optional features</h3>
-<pre><code># OpenAI adapter
-pip install -e ".[openai]"
-
-# Anthropic adapter
-pip install -e ".[anthropic]"
-
-# Semantic scoring
-pip install -e ".[scoring]"
-
-# Everything
-pip install -e ".[all]"</code></pre>
-<h2>2) Environment Setup</h2>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>USAGE - Aegis Monitor Docs</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --accent: #38bdf8;
+      --border: #374151;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 28px 18px 40px; }
+    .topnav {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(17, 24, 39, 0.8);
+    }
+    .topnav a {
+      color: var(--accent);
+      margin-right: 12px;
+      text-decoration: none;
+    }
+    .topnav a:hover { text-decoration: underline; }
+    .panel {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    h1, h2, h3 { color: var(--accent); margin-top: 1.5em; }
+    h1 { font-size: 1.875em; }
+    code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    pre {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav>
+    <article class="panel">
+      <p><h1>Usage Guide</h1></p>
+<p>This guide covers day-to-day use of Aegis Monitor from install to evaluation workflows.</p>
+<p><h2>1) Installation</h2></p>
+<p><h3>Base install</h3></p>
+<p><pre><code>pip install aegis-ai</code></pre></p>
+<p><h3>Development install (from source)</h3></p>
+<p><pre><code>git clone https://github.com/aegis-ai/aegis-ai</p>
+<p>cd aegis-ai</p>
+<p>python -m venv .venv</p>
+<p>source .venv/bin/activate</p>
+<p>pip install -e ".[dev]"</code></pre></p>
+<p><h3>Optional features</h3></p>
+<p><pre><code><h1>OpenAI adapter</h1></p>
+<p>pip install -e ".[openai]"</p>
+<p><h1>Anthropic adapter</h1></p>
+<p>pip install -e ".[anthropic]"</p>
+<p><h1>Semantic scoring</h1></p>
+<p>pip install -e ".[scoring]"</p>
+<p><h1>Everything</h1></p>
+<p>pip install -e ".[all]"</code></pre></p>
+<p><h2>2) Environment Setup</h2></p>
 <p>Create <code>.env</code> from the template:</p>
-<pre><code>cp .env.example .env</code></pre>
+<p><pre><code>cp .env.example .env</code></pre></p>
 <p>Set keys as needed:</p>
-<pre><code>OPENAI_API_KEY=your-openai-key
-ANTHROPIC_API_KEY=your-anthropic-key</code></pre>
-<h2>3) Dataset Format</h2>
+<p><pre><code>OPENAI_API_KEY=your-openai-key</p>
+<p>ANTHROPIC_API_KEY=your-anthropic-key</code></pre></p>
+<p><h2>3) Dataset Format</h2></p>
 <p>Aegis uses YAML datasets.</p>
-<pre><code>name: qa_sample
-description: basic QA checks
-cases:
-  - input: "What is the capital of France?"
-    expected: "Paris"
-    tags: ["geography"]
-  - input: "What is 2 + 2?"
-    expected: "4"
-    tags: ["math"]</code></pre>
+<p><pre><code>name: qa_sample</p>
+<p>description: basic QA checks</p>
+<p>cases:</p>
+<ul>
+<li>input: "What is the capital of France?"</li>
+</ul>
+<p>    expected: "Paris"</p>
+<p>    tags: ["geography"]</p>
+<ul>
+<li>input: "What is 2 + 2?"</li>
+</ul>
+<p>    expected: "4"</p>
+<p>    tags: ["math"]</code></pre></p>
 <p>Required fields:</p>
 <ul>
 <li><code>name</code></li>
 <li><code>cases</code> (array)</li>
 <li>each case needs <code>input</code> and <code>expected</code></li>
 </ul>
-<h2>4) CLI Usage</h2>
-<h3>Evaluate one model</h3>
-<pre><code>aegis eval run --dataset examples/datasets/qa_sample.yaml --model gpt-4</code></pre>
+<p><h2>4) CLI Usage</h2></p>
+<p><h3>Evaluate one model</h3></p>
+<p><pre><code>aegis eval run --dataset examples/datasets/qa_sample.yaml --model gpt-4</code></pre></p>
 <p>Options:</p>
 <ul>
 <li><code>--provider</code> (<code>auto</code>, <code>openai</code>, <code>mock</code>)</li>
@@ -54,65 +119,62 @@ cases:
 <li><code>--storage</code> SQLite file path</li>
 <li><code>--baseline</code> baseline dataset key for regression comparison</li>
 </ul>
-<h3>Compare multiple models</h3>
-<pre><code>aegis compare \
-  --dataset examples/datasets/qa_sample.yaml \
-  --models gpt-4,gpt-3.5-turbo,claude-3-opus</code></pre>
-<h3>Manage baselines</h3>
-<pre><code>aegis baseline set --dataset qa_sample --run-id &lt;RUN_ID&gt;
-aegis baseline show --dataset qa_sample
-aegis baseline list</code></pre>
-<h3>Cost analysis</h3>
-<pre><code>aegis cost report --period week
-aegis cost analyze --period month
-aegis cost budget --limit 100 --mode warn --dataset qa_sample</code></pre>
-<h2>5) Python API Usage</h2>
-<pre><code>from aegis.core.dataset import Dataset
-from aegis.adapters.mock_adapter import MockAdapter
-from aegis.scoring.exact_match import ExactMatchScorer
-from aegis.core.evaluator import Evaluator
-
-# Load dataset
-dataset = Dataset.from_yaml("examples/datasets/qa_sample.yaml")
-
-# Build evaluator
-adapter = MockAdapter("mock-model")
-scorer = ExactMatchScorer()
-evaluator = Evaluator(adapter, scorer)
-
-# Run
-result = evaluator.run_sync(dataset)
-print(result.avg_score, result.total_cost)</code></pre>
-<h2>6) Common Workflows</h2>
-<h3>Regression gate in CI</h3>
-<ol>
-<li>Run evaluation and save baseline from approved run.</li>
-<li>Compare new runs to baseline.</li>
-<li>Fail pipeline on regression threshold.</li>
-</ol>
-<h3>Cost-aware model selection</h3>
-<ol>
-<li>Run <code>aegis compare</code> on candidate models.</li>
-<li>Use CPQ (cost-per-quality) ranking from output.</li>
-<li>Pick model with best quality-cost balance.</li>
-</ol>
-<h2>7) Troubleshooting</h2>
-<h3><code>Unknown model</code> error</h3>
+<p><h3>Compare multiple models</h3></p>
+<p><pre><code>aegis compare \</p>
+<p>  --dataset examples/datasets/qa_sample.yaml \</p>
+<p>  --models gpt-4,gpt-3.5-turbo,claude-3-opus</code></pre></p>
+<p><h3>Manage baselines</h3></p>
+<p><pre><code>aegis baseline set --dataset qa_sample --run-id <RUN_ID></p>
+<p>aegis baseline show --dataset qa_sample</p>
+<p>aegis baseline list</code></pre></p>
+<p><h3>Cost analysis</h3></p>
+<p><pre><code>aegis cost report --period week</p>
+<p>aegis cost analyze --period month</p>
+<p>aegis cost budget --limit 100 --mode warn --dataset qa_sample</code></pre></p>
+<p><h2>5) Python API Usage</h2></p>
+<p><pre><code>from aegis.core.dataset import Dataset</p>
+<p>from aegis.adapters.mock_adapter import MockAdapter</p>
+<p>from aegis.scoring.exact_match import ExactMatchScorer</p>
+<p>from aegis.core.evaluator import Evaluator</p>
+<p><h1>Load dataset</h1></p>
+<p>dataset = Dataset.from_yaml("examples/datasets/qa_sample.yaml")</p>
+<p><h1>Build evaluator</h1></p>
+<p>adapter = MockAdapter("mock-model")</p>
+<p>scorer = ExactMatchScorer()</p>
+<p>evaluator = Evaluator(adapter, scorer)</p>
+<p><h1>Run</h1></p>
+<p>result = evaluator.run_sync(dataset)</p>
+<p>print(result.avg_score, result.total_cost)</code></pre></p>
+<p><h2>6) Common Workflows</h2></p>
+<p><h3>Regression gate in CI</h3></p>
+<p>1. Run evaluation and save baseline from approved run.</p>
+<p>2. Compare new runs to baseline.</p>
+<p>3. Fail pipeline on regression threshold.</p>
+<p><h3>Cost-aware model selection</h3></p>
+<p>1. Run <code>aegis compare</code> on candidate models.</p>
+<p>2. Use CPQ (cost-per-quality) ranking from output.</p>
+<p>3. Pick model with best quality-cost balance.</p>
+<p><h2>7) Troubleshooting</h2></p>
+<p><h3><code>Unknown model</code> error</h3></p>
 <ul>
 <li>Ensure model name matches supported adapter prefixes.</li>
-<li>Example: <code>gpt-*</code> (OpenAI), <code>claude-*</code> (Anthropic), <code>mock-*</code> via MockAdapter usage.</li>
+<li>Example: <code>gpt-<em></code> (OpenAI), <code>claude-</em></code> (Anthropic), <code>mock-*</code> via MockAdapter usage.</li>
 </ul>
-<h3>Missing dependency</h3>
+<p><h3>Missing dependency</h3></p>
 <ul>
 <li>Install optional dependency group (for example <code>.[anthropic]</code> or <code>.[scoring]</code>).</li>
 </ul>
-<h3>Empty or invalid dataset</h3>
+<p><h3>Empty or invalid dataset</h3></p>
 <ul>
 <li>Validate YAML structure (<code>name</code>, <code>cases</code>, each case with <code>input</code> and <code>expected</code>).</li>
 </ul>
-<h2>8) Next Reading</h2>
+<p><h2>8) Next Reading</h2></p>
 <ul>
-<li><a href="FULL_DOCUMENTATION.html">Full Documentation</a></li>
-<li><a href="ARCHITECTURE.html">Architecture</a></li>
-<li><a href="ADAPTER_DEVELOPMENT.html">Adapter Development</a></li>
-</ul></article></main></body></html>
+<li><a href="FULL_DOCUMENTATION.md">Full Documentation</a></li>
+<li><a href="ARCHITECTURE.md">Architecture</a></li>
+<li><a href="ADAPTER_DEVELOPMENT.md">Adapter Development</a></li>
+</ul>
+    </article>
+  </main>
+</body>
+</html>

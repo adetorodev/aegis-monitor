@@ -1,10 +1,10 @@
 # Creating Custom Adapters
 
-This guide explains how to create a custom LLM adapter for Aegis AI.
+This guide explains how to create a custom LLM adapter for Aegis Monitor.
 
 ## Overview
 
-An adapter is a plugin that integrates a specific LLM provider into Aegis AI. Adapters abstract away provider-specific details (API calls, token counting, response formats) behind a common interface.
+An adapter is a plugin that integrates a specific LLM provider into Aegis Monitor. Adapters abstract away provider-specific details (API calls, token counting, response formats) behind a common interface.
 
 ## Architecture
 
@@ -396,7 +396,7 @@ print(s.getvalue())
 
 ## Submitting Your Adapter
 
-To contribute your adapter to Aegis AI:
+To contribute your adapter to Aegis Monitor:
 
 1. Create a feature branch: `git checkout -b adapter/myprovider`
 2. Add adapter, tests, and documentation

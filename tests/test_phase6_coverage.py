@@ -1,4 +1,4 @@
-"""Additional tests for improved coverage - Phase 6."""
+"""Additional tests for improved coverage."""
 
 from unittest.mock import MagicMock, patch
 
