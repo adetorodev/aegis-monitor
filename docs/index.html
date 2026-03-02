@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aegis AI Documentation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --border: #374151;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.55;
+    }
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    .hero {
+      background: rgba(17, 24, 39, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      letter-spacing: 0.2px;
+    }
+
+    p { margin: 0; }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: rgba(31, 41, 55, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .section {
+      margin-top: 24px;
+      background: rgba(17, 24, 39, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+    }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    pre {
+      margin: 10px 0 0;
+      background: #0b1220;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      overflow-x: auto;
+      color: #cbd5e1;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Aegis AI Documentation</h1>
+      <p>LLM evaluation, cost monitoring, regression detection, and model comparison.</p>
+      <p class="sub">Use this page as the documentation homepage for the library.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h3>Usage Guide</h3>
+        <p>Install, configure, run evaluations, compare models, and use Python API.</p>
+        <a href="USAGE.html">Open Usage Guide</a>
+      </article>
+
+      <article class="card">
+        <h3>Full Documentation</h3>
+        <p>Complete project reference across architecture, workflows, and operations.</p>
+        <a href="FULL_DOCUMENTATION.html">Open Full Documentation</a>
+      </article>
+
+      <article class="card">
+        <h3>Architecture</h3>
+        <p>Detailed system design, module boundaries, extension points, and data flow.</p>
+        <a href="ARCHITECTURE.html">Open Architecture</a>
+      </article>
+
+      <article class="card">
+        <h3>Adapter Development</h3>
+        <p>Create and test custom provider adapters with implementation guidance.</p>
+        <a href="ADAPTER_DEVELOPMENT.html">Open Adapter Development</a>
+      </article>
+
+      <article class="card">
+        <h3>Contributing</h3>
+        <p>Project standards, PR process, testing expectations, and setup steps.</p>
+        <a href="CONTRIBUTING.html">Open Contributing</a>
+      </article>
+
+      <article class="card">
+        <h3>Code of Conduct</h3>
+        <p>Community behavior expectations and reporting process.</p>
+        <a href="CODE_OF_CONDUCT.html">Open Code of Conduct</a>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>Quick Start</h2>
+      <pre><code>pip install aegis-ai
+
+# evaluate a dataset
+aegis eval run --dataset examples/datasets/qa_sample.yaml --model gpt-4
+
+# compare multiple models
+aegis compare --dataset examples/datasets/qa_sample.yaml --models gpt-4,gpt-3.5-turbo,claude-3-opus</code></pre>
+    </section>
+
+    <section class="section">
+      <h2>Examples</h2>
+      <p>
+        <a href="../examples/simple_eval.py">simple_eval.py</a> ·
+        <a href="../examples/model_compare.py">model_compare.py</a> ·
+        <a href="../examples/cost_tracking_demo.py">cost_tracking_demo.py</a> ·
+        <a href="../examples/sentiment_classification.py">sentiment_classification.py</a> ·
+        <a href="../examples/qa_evaluation.py">qa_evaluation.py</a>
+      </p>
+    </section>
+
+    <footer>
+      Aegis AI Docs Homepage · Version 0.1.0
+    </footer>
+  </main>
+</body>
+</html>

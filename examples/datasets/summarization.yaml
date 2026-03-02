@@ -1,0 +1,14 @@
+name: summarization
+description: Text summarization evaluation
+cases:
+  - input: "The quick brown fox jumps over the lazy dog. This sentence contains every letter of the English alphabet."
+    expected: "A sentence demonstrating every letter of the alphabet"
+    tags: [summarization, text]
+
+  - input: "Machine learning is a subset of artificial intelligence that focuses on the development of algorithms and statistical models that enable computers to improve their performance on tasks through experience rather than being explicitly programmed."
+    expected: "Machine learning enables computers to learn from experience"
+    tags: [summarization, technical]
+
+scoring:
+  type: semantic_similarity
+  similarity_threshold: 0.7

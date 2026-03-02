@@ -1,0 +1,427 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>ARCHITECTURE - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Aegis AI Architecture</h1>
+<h2>Overview</h2>
+<p>Aegis AI is designed using a modular, pluggable architecture that allows users to:</p>
+<ol>
+<li>Evaluate LLM outputs against expected values</li>
+<li>Track costs per evaluation</li>
+<li>Compare multiple models</li>
+<li>Detect quality regressions</li>
+<li>Extend with custom adapters and scorers</li>
+</ol>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                     CLI (typer)                              │
+│    eval, eval_baseline, compare, cost, run                  │
+└──────────────────┬──────────────────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────────────────┐
+│                 Orchestration Layer                          │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │  Evaluator   │  │ CostTracking │  │   Comparison │      │
+│  │   (async)    │  │   (calc)     │  │  (ranking)   │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+└──────────────────┬──────────────────────────────────────────┘
+                   │
+        ┌──────────┼──────────┬────────────┐
+        │          │          │            │
+┌───────▼──┐ ┌────▼────┐ ┌──▼──────┐ ┌──▼─────┐
+│ Adapters │ │ Scorers │ │ Storage │ │ Costs  │
+├──────────┤ ├─────────┤ ├─────────┤ ├────────┤
+│OpenAI    │ │ExactMat │ │SQLite   │ │Pricing │
+│Anthropic │ │Semantic │ │Memory   │ │Calc    │
+│Mock      │ │Composite│ │Backend  │ │Limiter │
+│Custom    │ │Custom   │ │Custom   │ │Custom  │
+└──────────┘ └─────────┘ └─────────┘ └────────┘</code></pre>
+<h2>Core Components</h2>
+<h3>1. Adapter System (aegis/adapters/)</h3>
+<p>**Purpose**: Abstract different LLM providers into a unified interface</p>
+<p>**Base Class**: <code>BaseModelAdapter</code></p>
+<pre><code>class BaseModelAdapter(ABC):
+    def __init__(self, model: str)
+    @property
+    @abstractmethod
+    def provider_name(self) -&gt; str
+
+    @abstractmethod
+    async def generate(prompt, system_prompt, **kwargs) -&gt; ModelResponse
+
+    @abstractmethod
+    def get_model_info() -&gt; dict</code></pre>
+<p>**Concrete Implementations**:</p>
+<ul>
+<li>**OpenAIAdapter**: GPT-4, GPT-3.5-turbo, etc.</li>
+<li>**AnthropicAdapter**: Claude 3 Opus, Sonnet, Haiku</li>
+<li>**MockAdapter**: For testing without API calls</li>
+<li>**Custom**: Users can extend <code>BaseModelAdapter</code></li>
+</ul>
+<p>**Token Management**:</p>
+<ul>
+<li>OpenAI uses <code>tiktoken</code> library</li>
+<li>Anthropic uses <code>anthropic.Tokenizer</code></li>
+<li>Mock uses character-based estimation</li>
+</ul>
+<h3>2. Evaluation Engine (aegis/core/)</h3>
+<p>**Purpose**: Orchestrate evaluation workflows</p>
+<p>**Key Classes**:</p>
+<ul>
+<li><code>Dataset</code>: Loads test cases from YAML</li>
+<li><code>Evaluator</code>: Runs async evaluation pipeline</li>
+<li><code>EvaluationResult</code>: Aggregates metrics and results</li>
+<li><code>TestCaseResult</code>: Individual result record</li>
+</ul>
+<p>**Evaluation Flow**:</p>
+<pre><code>evaluator = Evaluator(
+    adapter=OpenAIAdapter("gpt-4"),
+    scorer=CompositeScorer(...),
+    storage=SQLiteBackend(...),
+    cost_calculator=CostCalculator(...)
+)
+
+result = await evaluator.run(
+    dataset=my_dataset,
+    system_prompt="You are helpful...",
+    temperature=0.7
+)
+
+# result contains:
+# - avg_score: 0.92
+# - total_cost: $0.15
+# - cases: [TestCaseResult, ...]
+# - metadata: {adapter, scorer, dataset_size, ...}</code></pre>
+<h3>3. Scoring System (aegis/scoring/)</h3>
+<p>**Purpose**: Evaluate quality of model outputs</p>
+<p>**Base Class**: <code>BaseScorer</code></p>
+<pre><code>class BaseScorer(ABC):
+    @property
+    @abstractmethod
+    def name(self) -&gt; str
+
+    @abstractmethod
+    def score(expected: str, actual: str) -&gt; ScoringResult</code></pre>
+<p>**Concrete Implementations**:</p>
+<ul>
+<li>**ExactMatchScorer**: Binary 0/1 matching</li>
+<li>**SemanticSimilarityScorer**: Uses sentence-transformers (0-1)</li>
+<li>**CompositeScorer**: Weighted combination</li>
+<li>**Custom**: Users can extend <code>BaseScorer</code></li>
+</ul>
+<p>**Scoring Pipeline**:</p>
+<pre><code>scorer = CompositeScorer(
+    scorers={
+        "exact": ExactMatchScorer(),
+        "semantic": SemanticSimilarityScorer()
+    },
+    weights={"exact": 0.4, "semantic": 0.6}
+)
+
+result = scorer.score(
+    expected="Paris",
+    actual="The capital of France is Paris"
+)
+# result.score: 0.75 (40% exact + 60% semantic)</code></pre>
+<h3>4. Cost Intelligence (aegis/cost/)</h3>
+<p>**Purpose**: Track and analyze model usage costs</p>
+<p>**Components**:</p>
+<ul>
+<li>**CostCalculator**: Token → $ conversion</li>
+<li>**CostAggregator**: Aggregate costs by model/period</li>
+<li>**CostLimiter**: Budget enforcement</li>
+<li>**PricingRegistry**: Model pricing data</li>
+</ul>
+<p>**Pricing Model**:</p>
+<pre><code>pricing = {
+    "gpt-4": {
+        "input": 0.03,      # $ per 1K tokens
+        "output": 0.06
+    },
+    "claude-3-opus": {
+        "input": 0.015,
+        "output": 0.075
+    }
+}
+
+cost = calculator.calculate_request_cost(
+    model="gpt-4",
+    input_tokens=150,
+    output_tokens=300
+)
+# cost = (150 * 0.03 + 300 * 0.06) / 1000 = $0.0225</code></pre>
+<p>**CPQ Metric** (Cost-Per-Quality):</p>
+<pre><code># Lower CPQ = better value
+cpq = total_cost / avg_score
+
+# Example:
+# Model A: cost=$0.20, score=0.90 → CPQ=0.222
+# Model B: cost=$0.10, score=0.80 → CPQ=0.125 (better)
+cpq_ranking = sorted(models, key=lambda m: m['cpq'])</code></pre>
+<h3>5. Storage Backend (aegis/storage/)</h3>
+<p>**Purpose**: Persist evaluation runs and baselines</p>
+<p>**Base Class**: <code>BaseStorage</code></p>
+<pre><code>class BaseStorage(ABC):
+    @abstractmethod
+    def save_run(run_data: dict, run_id: str) -&gt; None
+
+    @abstractmethod
+    def load_run(run_id: str) -&gt; dict | None
+
+    @abstractmethod
+    def save_baseline(dataset_name: str, baseline: dict) -&gt; None
+
+    @abstractmethod
+    def load_baseline(dataset_name: str) -&gt; dict | None</code></pre>
+<p>**Concrete Implementations**:</p>
+<ul>
+<li>**SQLiteBackend**: Relational database (production)</li>
+<li>**MemoryBackend**: In-memory (testing)</li>
+<li>**Custom**: Users can extend <code>BaseStorage</code></li>
+</ul>
+<p>**Database Schema**:</p>
+<pre><code>-- Runs table
+CREATE TABLE runs (
+    run_id TEXT PRIMARY KEY,
+    dataset_name TEXT,
+    model TEXT,
+    created_at TIMESTAMP,
+    run_json TEXT  -- Full result JSON
+);
+
+-- Baselines table
+CREATE TABLE baselines (
+    dataset_name TEXT PRIMARY KEY,
+    model TEXT,
+    baseline_json TEXT  -- Baseline metrics
+);</code></pre>
+<h3>6. CLI Interface (aegis/cli/)</h3>
+<p>**Framework**: Typer (async-first)</p>
+<p>**Commands**:</p>
+<pre><code># Evaluate single model
+aegis eval --dataset data.yaml --model gpt-4
+
+# Compare multiple models
+aegis compare --dataset data.yaml \
+  --models gpt-4,gpt-3.5-turbo,claude-3-opus
+
+# Manage baselines
+aegis baseline set --dataset qa --model gpt-4
+aegis baseline show --dataset qa
+
+# Track costs
+aegis cost --dataset data.yaml --mode daily|weekly|monthly
+
+# Legacy compatibility
+aegis run --dataset data.yaml --model gpt-4</code></pre>
+<h2>Data Flow</h2>
+<h3>Evaluation Flow</h3>
+<pre><code>Dataset YAML
+    ↓
+Dataset.from_yaml() → Load test cases
+    ↓
+For each test case:
+    ├→ Adapter.generate(prompt)
+    ├→ Scorer.score(expected, actual)
+    ├→ CostCalculator.calculate_cost(tokens)
+    └→ TestCaseResult
+    ↓
+EvaluationResult (aggregated)
+    ↓
+Storage.save_run(result)</code></pre>
+<h3>Comparison Flow</h3>
+<pre><code>Dataset YAML
+    ↓
+For each model:
+    ├→ Evaluation Flow
+    ├→ Collect metrics
+    └→ Calculate CPQ
+    ↓
+Sort by CPQ (ascending)
+    ↓
+Output (text table or JSON)</code></pre>
+<h2>Extension Points</h2>
+<h3>Adding a Custom Adapter</h3>
+<pre><code>from aegis.adapters.base import BaseModelAdapter, ModelResponse
+
+class MyAdapter(BaseModelAdapter):
+    @property
+    def provider_name(self) -&gt; str:
+        return "my_provider"
+
+    async def generate(self, prompt, system_prompt=None, **kwargs):
+        # Call your LLM API
+        response = await my_llm_client.complete(prompt)
+        return ModelResponse(
+            text=response.text,
+            input_tokens=response.usage.input,
+            output_tokens=response.usage.output,
+            latency_ms=response.duration_ms,
+            model=self.model,
+            raw_metadata=response.metadata
+        )
+
+    def get_model_info(self) -&gt; dict:
+        return {
+            "context_window": 4096,
+            "training_date": "2024-01",
+            "supports_vision": False
+        }</code></pre>
+<h3>Adding a Custom Scorer</h3>
+<pre><code>from aegis.scoring.base import BaseScorer, ScoringResult
+
+class MyScorer(BaseScorer):
+    @property
+    def name(self) -&gt; str:
+        return "my_scorer"
+
+    def score(self, expected: str, actual: str) -&gt; ScoringResult:
+        # Custom scoring logic
+        similarity = calculate_similarity(expected, actual)
+        return ScoringResult(
+            score=similarity,
+            explanation=f"Similarity: {similarity:.2%}"
+        )</code></pre>
+<h2>Performance Considerations</h2>
+<h3>Async/Sync</h3>
+<ul>
+<li>**Evaluator.run()**: Async method (preferred)</li>
+<li>**Evaluator.run_sync()**: Wrapper using asyncio.run()</li>
+<li>CLI automatically handles async execution</li>
+</ul>
+<h3>Token Counting</h3>
+<ul>
+<li>**OpenAI**: Uses tiktoken (~instant)</li>
+<li>**Anthropic**: Uses anthropic SDK tokenizer (~instant)</li>
+<li>**Semantic Similarity**: First load ~2s, subsequent &lt;50ms</li>
+</ul>
+<h3>Cost Calculation</h3>
+<ul>
+<li>Pre-computed pricing tables</li>
+<li>O(1) per-token calculation</li>
+<li>Batch aggregation available</li>
+</ul>
+<h3>Storage</h3>
+<ul>
+<li>SQLite indexes on run_id, dataset_name</li>
+<li>Connection pooling in production</li>
+<li>Prepared statements prevent SQL injection</li>
+</ul>
+<h2>Error Handling Strategy</h2>
+<h3>Graceful Degradation</h3>
+<ol>
+<li>**Missing Optional Dependencies**</li>
+</ol>
+<ul>
+<li>Anthropic SDK: Tests skipped, adapter unavailable</li>
+<li>Transformers: Semantic scorer unavailable</li>
+<li>Fallback to available alternatives</li>
+</ul>
+<ol>
+<li>**API Failures**</li>
+</ol>
+<ul>
+<li>Timeout handling with retries</li>
+<li>Circuit breaker pattern for repeated failures</li>
+<li>User-friendly error messages</li>
+</ul>
+<ol>
+<li>**Data Validation**</li>
+</ol>
+<ul>
+<li>Dataset schema validation</li>
+<li>Model name existence checks</li>
+<li>Cost limits enforcement</li>
+</ul>
+<h2>Integration Patterns</h2>
+<h3>Batch Evaluation</h3>
+<pre><code># Evaluate multiple models
+for model_name in ["gpt-4", "gpt-3.5-turbo"]:
+    adapter = OpenAIAdapter(model_name)
+    evaluator = Evaluator(adapter, scorer, storage)
+    result = await evaluator.run(dataset)</code></pre>
+<h3>Cost-Aware Evaluation</h3>
+<pre><code># Stop evaluation if cost exceeds limit
+limiter = CostLimiter(budget=10.0)  # $10 max
+for case in dataset.cases:
+    cost = calculate_cost(...)
+    if not limiter.can_proceed(cost):
+        break  # Budget exhausted</code></pre>
+<h3>Regression Detection</h3>
+<pre><code># Compare against baseline
+baseline = storage.load_baseline("qa_dataset")
+current = evaluation_result
+
+if current.avg_score &lt; baseline["avg_score"] * 0.95:
+    print("⚠️  20% score regression detected!")</code></pre>
+<h2>Dependencies Graph</h2>
+<pre><code>aegis/
+├── adapters/
+│   ├── (optional) anthropic
+│   └── (optional) openai
+├── core/
+│   └── yaml (for dataset)
+├── scoring/
+│   └── (optional) sentence-transformers
+├── cost/
+│   └── (none)
+├── storage/
+│   └── sqlite3 (stdlib)
+├── cli/
+│   ├── typer
+│   ├── rich (for tables)
+│   └── pydantic (validation)
+└── utils/
+    └── (standard library)</code></pre>
+<h2>Testing Strategy</h2>
+<h3>Unit Tests</h3>
+<ul>
+<li>Test each component in isolation</li>
+<li>Mock external dependencies</li>
+<li>Cover happy path and error cases</li>
+</ul>
+<h3>Integration Tests</h3>
+<ul>
+<li>Test component interactions</li>
+<li>Use real storage backends (in-memory)</li>
+<li>Mock API calls with fixtures</li>
+</ul>
+<h3>Performance Tests</h3>
+<ul>
+<li>Benchmark cost calculations</li>
+<li>Test with 1000+ test cases</li>
+<li>Verify async scaling</li>
+</ul>
+<h2>Deployment Considerations</h2>
+<h3>Development</h3>
+<pre><code>pip install -e ".[dev]"  # Includes all dependencies</code></pre>
+<h3>Production</h3>
+<pre><code>pip install aegis-ai  # Minimal dependencies
+# Add optional adapters as needed:
+pip install anthropic          # For Claude models
+pip install sentence-transformers  # For semantic similarity</code></pre>
+<h3>Environment Variables</h3>
+<pre><code>OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+AEGIS_LOG_LEVEL=INFO
+AEGIS_STORAGE_PATH=./data/aegis.db</code></pre>
+<h3>Monitoring</h3>
+<ul>
+<li>Log all evaluations (dataset, model, score, cost)</li>
+<li>Track cost by model and user</li>
+<li>Alert on cost threshold exceeded</li>
+<li>Monitor API error rates</li>
+</ul>
+<h2>Future Architecture Improvements</h2>
+<ol>
+<li>**Distributed Evaluation**: Multi-worker evaluation with job queue</li>
+<li>**Streaming Results**: Real-time result reporting</li>
+<li>**Caching Layer**: Cache same prompts across evaluations</li>
+<li>**Vector Database**: Store embeddings for semantic search</li>
+<li>**Observability**: OpenTelemetry integration</li>
+<li>**Multi-User**: Authentication and per-user cost tracking</li>
+</ol>
+<hr/>
+<p>This architecture ensures:</p>
+<ul>
+<li>✅ **Extensibility**: Add adapters, scorers, storage backends</li>
+<li>✅ **Reliability**: Error handling and graceful degradation</li>
+<li>✅ **Performance**: Async operations and efficient calculations</li>
+<li>✅ **Testability**: Mockable components and clear interfaces</li>
+<li>✅ **Production-Ready**: Logging, monitoring, and cost controls</li>
+</ul></article></main></body></html>

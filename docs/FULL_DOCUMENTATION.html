@@ -1,0 +1,157 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>FULL_DOCUMENTATION - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Full Documentation</h1>
+<p>This document is the complete high-level reference for Aegis AI.</p>
+<h2>1. What Aegis AI Solves</h2>
+<p>Aegis AI helps teams evaluate model output quality, monitor costs, compare models, and detect regressions in production-oriented workflows.</p>
+<h2>2. System Modules</h2>
+<h3><code>aegis/core</code></h3>
+<ul>
+<li><code>Dataset</code>: YAML dataset loading and validation</li>
+<li><code>Evaluator</code>: asynchronous/synchronous execution over test cases</li>
+<li><code>EvaluationResult</code> / <code>TestCaseResult</code>: normalized result models</li>
+</ul>
+<h3><code>aegis/adapters</code></h3>
+<ul>
+<li>OpenAI, Anthropic, Mock providers</li>
+<li>Unified model interface via <code>BaseModelAdapter</code></li>
+<li>Standardized <code>ModelResponse</code></li>
+</ul>
+<h3><code>aegis/scoring</code></h3>
+<ul>
+<li>Exact match scoring</li>
+<li>Semantic similarity scoring</li>
+<li>Composite weighted scoring</li>
+</ul>
+<h3><code>aegis/cost</code></h3>
+<ul>
+<li>Pricing registry</li>
+<li>Request-level cost calculator</li>
+<li>Cost aggregation and budget limits</li>
+</ul>
+<h3><code>aegis/storage</code></h3>
+<ul>
+<li>SQLite backend for persistent runs/baselines</li>
+<li>Memory backend for tests and ephemeral workflows</li>
+</ul>
+<h3><code>aegis/cli</code></h3>
+<ul>
+<li><code>eval run</code> for evaluations</li>
+<li><code>compare</code> for model comparison</li>
+<li><code>baseline</code> for baseline management</li>
+<li><code>cost</code> for reporting and budgeting</li>
+<li><code>run</code> as compatibility alias</li>
+</ul>
+<h2>3. End-to-End Evaluation Flow</h2>
+<ol>
+<li>Load dataset from YAML.</li>
+<li>Build adapter + scorer (+ optional storage/cost calculator).</li>
+<li>Execute all test cases with the evaluator.</li>
+<li>Compute average quality, cost, latency, pass rate.</li>
+<li>Save run for trend and baseline comparisons.</li>
+</ol>
+<h2>4. CLI Reference</h2>
+<h3>Evaluate</h3>
+<pre><code>aegis eval run \
+  --dataset &lt;path.yaml&gt; \
+  --model gpt-4 \
+  --provider auto \
+  --output text \
+  --storage aegis.db</code></pre>
+<h3>Compare</h3>
+<pre><code>aegis compare \
+  --dataset &lt;path.yaml&gt; \
+  --models gpt-4,gpt-3.5-turbo,claude-3-opus \
+  --output text</code></pre>
+<h3>Baseline</h3>
+<pre><code>aegis baseline set --dataset &lt;dataset_name&gt; --run-id &lt;run_id&gt;
+aegis baseline show --dataset &lt;dataset_name&gt;
+aegis baseline list</code></pre>
+<h3>Cost</h3>
+<pre><code>aegis cost report --period week
+aegis cost analyze --period month
+aegis cost budget --limit 100 --mode warn --dataset &lt;dataset_name&gt;</code></pre>
+<h2>5. Python API Reference</h2>
+<h3>Minimal API usage</h3>
+<pre><code>from aegis.core.dataset import Dataset
+from aegis.adapters.mock_adapter import MockAdapter
+from aegis.scoring.exact_match import ExactMatchScorer
+from aegis.core.evaluator import Evaluator
+
+dataset = Dataset.from_yaml("examples/datasets/qa_sample.yaml")
+adapter = MockAdapter("mock-model")
+scorer = ExactMatchScorer()
+
+evaluator = Evaluator(adapter, scorer)
+result = evaluator.run_sync(dataset)
+print(result.avg_score, result.total_cost)</code></pre>
+<h3>Advanced API usage with storage and cost</h3>
+<pre><code>from aegis.storage.sqlite_backend import SQLiteBackend
+from aegis.cost.calculator import CostCalculator
+
+storage = SQLiteBackend("aegis.db")
+storage.initialize()
+cost_calculator = CostCalculator()
+
+evaluator = Evaluator(adapter, scorer, storage=storage, cost_calculator=cost_calculator)
+result = evaluator.run_sync(dataset)</code></pre>
+<h2>6. Configuration</h2>
+<h3>Environment variables</h3>
+<ul>
+<li><code>OPENAI_API_KEY</code></li>
+<li><code>ANTHROPIC_API_KEY</code></li>
+<li>optional app-level settings from <code>.env</code></li>
+</ul>
+<h3>Dependency groups</h3>
+<ul>
+<li><code>.[openai]</code></li>
+<li><code>.[anthropic]</code></li>
+<li><code>.[scoring]</code></li>
+<li><code>.[dev]</code></li>
+<li><code>.[all]</code></li>
+</ul>
+<h2>7. Output and Metrics</h2>
+<p>Typical metrics in run results:</p>
+<ul>
+<li>Average score</li>
+<li>Pass rate</li>
+<li>Total cost</li>
+<li>Average latency</li>
+<li>Per-case metadata (tokens, model, scorer explanation)</li>
+</ul>
+<p>Comparison adds:</p>
+<ul>
+<li>CPQ (cost-per-quality)</li>
+<li>Per-model ranking</li>
+</ul>
+<h2>8. Testing and Validation</h2>
+<ul>
+<li>Unit tests: adapters/core/scoring/cost/storage</li>
+<li>Integration tests: CLI and evaluation flows</li>
+<li>Coverage reports via pytest-cov</li>
+</ul>
+<p>Run all tests:</p>
+<pre><code>pytest -v</code></pre>
+<p>Run validation utility:</p>
+<pre><code>python validate_project.py</code></pre>
+<h2>9. Extension Guide Summary</h2>
+<ul>
+<li>Custom adapters: see <a href="ADAPTER_DEVELOPMENT.html">ADAPTER_DEVELOPMENT.md</a></li>
+<li>Custom scorers: implement scorer interface</li>
+<li>Custom storage: implement storage base interface</li>
+</ul>
+<h2>10. Security and Operational Notes</h2>
+<ul>
+<li>Never commit API keys.</li>
+<li>Use environment variables/secrets manager in CI.</li>
+<li>Prefer mock adapter in tests to avoid accidental external calls.</li>
+<li>Set budget limits for production cost controls.</li>
+</ul>
+<h2>11. Documentation Map</h2>
+<ul>
+<li><a href="README.html">Docs Home</a></li>
+<li><a href="USAGE.html">Usage Guide</a></li>
+<li><a href="ARCHITECTURE.html">Architecture</a></li>
+<li><a href="ADAPTER_DEVELOPMENT.html">Adapter Development</a></li>
+<li><a href="CONTRIBUTING.html">Contributing</a></li>
+<li><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></li>
+<li><a href="index.html">HTML Homepage</a></li>
+</ul></article></main></body></html>

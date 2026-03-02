@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>README - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Aegis AI Documentation</h1>
+<p>Welcome to the Aegis AI documentation portal.</p>
+<h2>Start Here</h2>
+<ul>
+<li><a href="USAGE.html">Usage Guide</a> — installation, dataset format, CLI, Python API</li>
+<li><a href="FULL_DOCUMENTATION.html">Full Documentation</a> — complete reference and architecture overview</li>
+<li><a href="ARCHITECTURE.html">Architecture</a> — system design and component interactions</li>
+<li><a href="ADAPTER_DEVELOPMENT.html">Adapter Development</a> — build custom providers/adapters</li>
+<li><a href="CONTRIBUTING.html">Contributing Guide</a> — how to contribute code and docs</li>
+<li><a href="CODE_OF_CONDUCT.html">Code of Conduct</a> — community standards</li>
+</ul>
+<h2>HTML Homepage</h2>
+<p>Open <a href="index.html">Documentation Home</a> in your browser for a visual, clickable docs landing page.</p>
+<p>Open <a href="README.html">Docs Index (HTML)</a> for rendered documentation pages.</p>
+<h2>Examples</h2>
+<ul>
+<li><a href="../examples/sentiment_classification.py">Sentiment Classification Example</a></li>
+<li><a href="../examples/qa_evaluation.py">QA Evaluation Example</a></li>
+<li><a href="../examples/custom_adapter.py">Custom Adapter Example</a></li>
+<li><a href="../examples/simple_eval.py">Simple Evaluation Example</a></li>
+</ul>
+<h2>Quick CLI Commands</h2>
+<pre><code># Evaluate one model
+aegis eval run --dataset examples/datasets/qa_sample.yaml --model gpt-4
+
+# Compare multiple models
+aegis compare --dataset examples/datasets/qa_sample.yaml --models gpt-4,gpt-3.5-turbo
+
+# Baselines
+aegis baseline set --dataset qa_sample --run-id &lt;RUN_ID&gt;
+aegis baseline show --dataset qa_sample
+
+# Cost reporting
+aegis cost report --period week</code></pre></article></main></body></html>

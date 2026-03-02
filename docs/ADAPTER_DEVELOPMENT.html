@@ -1,0 +1,331 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>ADAPTER_DEVELOPMENT - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Creating Custom Adapters</h1>
+<p>This guide explains how to create a custom LLM adapter for Aegis AI.</p>
+<h2>Overview</h2>
+<p>An adapter is a plugin that integrates a specific LLM provider into Aegis AI. Adapters abstract away provider-specific details (API calls, token counting, response formats) behind a common interface.</p>
+<h2>Architecture</h2>
+<p>All adapters inherit from <code>BaseModelAdapter</code>:</p>
+<pre><code>from aegis.adapters.base import BaseModelAdapter, ModelResponse
+
+class MyCustomAdapter(BaseModelAdapter):
+    """Adapter for MyProvider LLM."""
+
+    async def call(self, prompt: str, **kwargs) -&gt; ModelResponse:
+        """Execute a prompt and return response."""
+        pass
+
+    def validate_connection(self) -&gt; bool:
+        """Verify API connectivity."""
+        pass
+
+    def get_model_info(self) -&gt; dict:
+        """Return model metadata."""
+        pass</code></pre>
+<h2>Step 1: Create Your Adapter File</h2>
+<p>Create <code>aegis/adapters/myprovider_adapter.py</code>:</p>
+<pre><code>"""Adapter for MyProvider LLM service."""
+
+import logging
+from typing import Any, Optional
+
+from aegis.adapters.base import BaseModelAdapter, ModelResponse
+
+logger = logging.getLogger(__name__)
+
+
+class MyProviderAdapter(BaseModelAdapter):
+    """Adapter for MyProvider API."""
+
+    PRICING = {
+        "myprovider-large": {"input": 0.01, "output": 0.05},
+    }
+
+    def __init__(self, api_key: Optional[str] = None, model: str = "myprovider-large"):
+        """Initialize adapter.
+
+        Args:
+            api_key: API key for provider (defaults to env var).
+            model: Model name to use.
+        """
+        super().__init__()
+        self.api_key = api_key
+        self.model = model
+        # Initialize your HTTP client, etc.
+
+    async def call(self, prompt: str, **kwargs: Any) -&gt; ModelResponse:
+        """Call the model.
+
+        Args:
+            prompt: Input prompt text.
+            **kwargs: Additional parameters (temperature, max_tokens, etc).
+
+        Returns:
+            ModelResponse with output and metadata.
+        """
+        # Call your provider's API
+        response = await self._call_api(prompt, **kwargs)
+
+        # Parse response and extract:
+        # - text: the generated output
+        # - input_tokens: tokens used in prompt
+        # - output_tokens: tokens used in response
+        # - latency_ms: time to complete
+        # - model: model name used
+        # - raw_metadata: any provider-specific data
+
+        return ModelResponse(
+            text=response.text,
+            input_tokens=response.input_tokens,
+            output_tokens=response.output_tokens,
+            latency_ms=response.latency_ms,
+            model=self.model,
+            raw_metadata={"request_id": response.request_id},
+        )
+
+    def validate_connection(self) -&gt; bool:
+        """Test API connectivity.
+
+        Returns:
+            True if API is accessible.
+        """
+        try:
+            # Try a minimal API call
+            response = self._call_api("test")
+            return True
+        except Exception as e:
+            logger.error(f"Connection failed: {e}")
+            return False
+
+    def get_model_info(self) -&gt; dict[str, Any]:
+        """Return model metadata.
+
+        Returns:
+            Dictionary with model details including pricing.
+        """
+        pricing = self.PRICING.get(self.model, {"input": 0.0, "output": 0.0})
+
+        return {
+            "model": self.model,
+            "provider": "myprovider",
+            "pricing": {
+                "input_per_1k_tokens": pricing["input"],
+                "output_per_1k_tokens": pricing["output"],
+            },
+            "context_window": 4096,
+            "supports_async": True,
+        }
+
+    async def _call_api(self, prompt: str, **kwargs) -&gt; Any:
+        """Implementation-specific API call."""
+        # Your code here
+        pass</code></pre>
+<h2>Step 2: Register Your Adapter</h2>
+<p>Add your adapter to the registry in <code>aegis/adapters/registry.py</code>:</p>
+<pre><code>def get_adapter(model: str, **kwargs) -&gt; BaseModelAdapter:
+    """Get adapter for model.
+
+    Args:
+        model: Model identifier (e.g., "gpt-4", "claude-3-opus").
+        **kwargs: Additional arguments for adapter.
+
+    Returns:
+        Initialized adapter instance.
+
+    Raises:
+        ValueError: If model not found.
+    """
+    if model.startswith("gpt-"):
+        from aegis.adapters.openai_adapter import OpenAIAdapter
+        return OpenAIAdapter(model=model, **kwargs)
+
+    elif model.startswith("claude-"):
+        from aegis.adapters.anthropic_adapter import AnthropicAdapter
+        return AnthropicAdapter(model=model, **kwargs)
+
+    elif model.startswith("myprovider-"):  # ADD THIS
+        from aegis.adapters.myprovider_adapter import MyProviderAdapter
+        return MyProviderAdapter(model=model, **kwargs)
+
+    else:
+        raise ValueError(f"Unknown model: {model}")</code></pre>
+<h2>Step 3: Write Tests</h2>
+<p>Create <code>tests/test_myprovider_adapter.py</code>:</p>
+<pre><code>"""Tests for MyProvider adapter."""
+
+from unittest.mock import MagicMock, patch
+import pytest
+
+from aegis.adapters.myprovider_adapter import MyProviderAdapter
+from aegis.adapters.base import ModelResponse
+
+
+class TestMyProviderAdapter:
+    """Test MyProvider adapter."""
+
+    def test_initialization(self):
+        """Test adapter initialization."""
+        adapter = MyProviderAdapter(api_key="test-key")
+        assert adapter.model == "myprovider-large"
+        assert adapter.api_key == "test-key"
+
+    def test_get_model_info(self):
+        """Test model info retrieval."""
+        adapter = MyProviderAdapter(api_key="test-key")
+        info = adapter.get_model_info()
+
+        assert info["provider"] == "myprovider"
+        assert "pricing" in info
+        assert info["supports_async"] is True
+
+    @pytest.mark.asyncio
+    async def test_call(self):
+        """Test making a call."""
+        adapter = MyProviderAdapter(api_key="test-key")
+
+        # Mock the API response
+        mock_response = MagicMock()
+        mock_response.text = "Test response"
+        mock_response.input_tokens = 10
+        mock_response.output_tokens = 20
+
+        with patch.object(
+            adapter, "_call_api", return_value=mock_response
+        ):
+            response = await adapter.call("test prompt")
+
+            assert isinstance(response, ModelResponse)
+            assert response.text == "Test response"
+            assert response.input_tokens == 10
+            assert response.output_tokens == 20
+
+    def test_validate_connection(self):
+        """Test connection validation."""
+        adapter = MyProviderAdapter(api_key="test-key")
+
+        with patch.object(adapter, "_call_api"):
+            assert adapter.validate_connection() is True</code></pre>
+<h2>Step 4: Document Your Adapter</h2>
+<p>Add documentation in your adapter docstring:</p>
+<pre><code>class MyProviderAdapter(BaseModelAdapter):
+    """Adapter for MyProvider LLM service.
+
+    MyProvider is a high-performance LLM service designed for production use.
+
+    ## Models Supported
+
+    - `myprovider-large`: Full capability model
+    - `myprovider-medium`: Balanced performance
+    - `myprovider-lite`: Cost-optimized
+
+    ## Authentication
+
+    Set `MYPROVIDER_API_KEY` environment variable or pass `api_key` parameter.
+
+    ## Usage
+</code></pre>
+<p>from aegis.adapters.myprovider_adapter import MyProviderAdapter</p>
+<p>adapter = MyProviderAdapter(model="myprovider-large")</p>
+<p>response = await adapter.call("What is AI?")</p>
+<p>print(response.text)</p>
+<pre><code>
+    ## Pricing
+
+    See `PRICING` class variable for current rates.
+
+    ## Limitations
+
+    - Maximum context window: 4096 tokens
+    - Rate limit: 100 requests/minute
+
+    ## Resources
+
+    - <a href="https://docs.myprovider.com">MyProvider API Docs</a>
+    - <a href="../examples">Example Projects</a>
+    """</code></pre>
+<h2>Best Practices</h2>
+<h3>1. Token Counting</h3>
+<p>Always use the provider's reported token counts, not estimates:</p>
+<pre><code># ✅ Good: Use provider's token count
+input_tokens = response.usage.input_tokens
+output_tokens = response.usage.output_tokens
+
+# ❌ Bad: Estimate token count
+input_tokens = len(prompt.split())  # Inaccurate!</code></pre>
+<h3>2. API Key Management</h3>
+<p>Use environment variables for sensitive data:</p>
+<pre><code>import os
+
+api_key = api_key or os.getenv("MYPROVIDER_API_KEY")
+if not api_key:
+    raise ValueError("API key required. Set MYPROVIDER_API_KEY env var.")</code></pre>
+<h3>3. Error Handling</h3>
+<p>Handle API errors gracefully:</p>
+<pre><code>try:
+    response = await self._call_api(prompt)
+except RateLimitError as e:
+    logger.warning(f"Rate limited: {e}")
+    raise
+except ConnectionError as e:
+    logger.error(f"Connection failed: {e}")
+    raise
+except Exception as e:
+    logger.error(f"Unexpected error: {e}")
+    raise</code></pre>
+<h3>4. Latency Measurement</h3>
+<p>Always measure end-to-end latency:</p>
+<pre><code>import time
+
+start = time.time()
+response = await self._call_api(prompt)
+latency_ms = (time.time() - start) * 1000
+
+return ModelResponse(latency_ms=latency_ms, ...)</code></pre>
+<h3>5. Metadata Preservation</h3>
+<p>Keep provider-specific metadata for debugging:</p>
+<pre><code>return ModelResponse(
+    text=response.text,
+    ...,
+    raw_metadata={
+        "request_id": response.request_id,
+        "model_version": response.model_version,
+        "finish_reason": response.finish_reason,
+    },
+)</code></pre>
+<h2>Testing</h2>
+<p>Run adapter tests:</p>
+<pre><code>pytest tests/test_myprovider_adapter.py -v</code></pre>
+<p>Run integration tests with your adapter:</p>
+<pre><code>aegis eval run \
+  --dataset examples/qa_sample.yaml \
+  --model myprovider-large</code></pre>
+<h2>Troubleshooting</h2>
+<h3>"Unknown model" error</h3>
+<p>Ensure your adapter is registered in <code>registry.py</code> and model name matches pattern.</p>
+<h3>Token count mismatch</h3>
+<p>Some providers report tokens differently. Check the provider's documentation for token calculation method.</p>
+<h3>Performance issues</h3>
+<p>Profile your adapter:</p>
+<pre><code>import cProfile
+import pstats
+from io import StringIO
+
+pr = cProfile.Profile()
+pr.enable()
+await adapter.call(prompt)
+pr.disable()
+
+s = StringIO()
+ps = pstats.Stats(pr, stream=s).sort_stats("cumulative")
+ps.print_stats()
+print(s.getvalue())</code></pre>
+<h2>Submitting Your Adapter</h2>
+<p>To contribute your adapter to Aegis AI:</p>
+<ol>
+<li>Create a feature branch: <code>git checkout -b adapter/myprovider</code></li>
+<li>Add adapter, tests, and documentation</li>
+<li>Achieve 80%+ code coverage</li>
+<li>Submit pull request with example usage</li>
+<li>Get community feedback and merge!</li>
+</ol>
+<p>See <a href="../CONTRIBUTING.html">CONTRIBUTING.md</a> for contribution guidelines.</p>
+<hr/>
+<p>**Questions?** Open an issue on <a href="https://github.com/yourusername/aegis-ai/issues">GitHub</a>.</p></article></main></body></html>

@@ -1,0 +1,42 @@
+name: qa_sample
+description: Basic Q&A evaluation dataset
+cases:
+  - input: "What is the capital of France?"
+    expected: "Paris"
+    tags: [geography, easy]
+    metadata:
+      category: geography
+
+  - input: "What is 2 + 2?"
+    expected: "4"
+    tags: [math, easy]
+    metadata:
+      category: arithmetic
+
+  - input: "Explain quantum entanglement"
+    expected: "A quantum phenomenon where particles become correlated such that the quantum state of each particle cannot be described independently"
+    tags: [physics, hard]
+    metadata:
+      category: physics
+
+  - input: "What is the chemical formula for water?"
+    expected: "H2O"
+    tags: [chemistry, easy]
+    metadata:
+      category: chemistry
+
+  - input: "Name three famous painters"
+    expected: "Leonardo da Vinci, Pablo Picasso, Vincent van Gogh"
+    tags: [art, medium]
+    metadata:
+      category: art
+
+metadata:
+  source: "manual"
+  created_date: "2024-03-02"
+  version: "1.0"
+
+scoring:
+  type: exact_match
+  case_sensitive: false
+  ignore_whitespace: true
