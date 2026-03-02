@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
     - uses: actions/checkout@v4
@@ -27,12 +27,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -e ".[dev]"
 
-    - name: Lint with flake8
+    - name: Lint with ruff
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 aegis --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings
-        flake8 aegis --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        ruff check aegis
       continue-on-error: true
 
     - name: Type check with mypy
