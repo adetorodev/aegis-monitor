@@ -1,5 +1,6 @@
 # Aegis AI - Development Dependencies
 # Install with: pip install -r requirements-dev.txt
+# Or directly: pip install "aegis-monitor[dev]"
 
 # First install core dependencies
 -r requirements.txt
