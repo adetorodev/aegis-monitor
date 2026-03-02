@@ -1,6 +1,6 @@
 # Usage Guide
 
-This guide covers day-to-day use of Aegis AI from install to evaluation workflows.
+This guide covers day-to-day use of Aegis Monitor from install to evaluation workflows.
 
 ## 1) Installation
 

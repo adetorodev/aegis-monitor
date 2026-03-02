@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thanks for contributing to Aegis AI.
+Thanks for contributing to Aegis Monitor.
 
 ## Ways to Contribute
 

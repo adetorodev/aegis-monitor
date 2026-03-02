@@ -1,6 +1,70 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>CONTRIBUTING - Aegis AI Docs</title><style>:root{--bg:#0f172a;--panel:#111827;--text:#e5e7eb;--accent:#38bdf8;--border:#374151}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);color:var(--text);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;line-height:1.65}.wrap{max-width:960px;margin:0 auto;padding:28px 18px 40px}.topnav{margin-bottom:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(17,24,39,.8)}.topnav a{color:var(--accent);text-decoration:none;margin-right:12px;font-weight:600}.panel{background:rgba(17,24,39,.78);border:1px solid var(--border);border-radius:14px;padding:22px}h1,h2,h3,h4{line-height:1.3;margin-top:1.1em;margin-bottom:.45em}h1{font-size:1.85rem}h2{font-size:1.45rem}h3{font-size:1.2rem}p,li{color:#d1d5db}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:.14em .36em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#c7d2fe}pre{background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto}pre code{border:0;padding:0;background:transparent;color:#cbd5e1}blockquote{margin:0;padding:8px 12px;border-left:3px solid var(--accent);background:rgba(31,41,55,.6)}hr{border:0;border-top:1px solid var(--border)}</style></head><body><main class="wrap"><nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav><article class="panel"><h1>Contributing Guide</h1>
-<p>Thanks for contributing to Aegis AI.</p>
-<h2>Ways to Contribute</h2>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>CONTRIBUTING - Aegis Monitor Docs</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --text: #e5e7eb;
+      --accent: #38bdf8;
+      --border: #374151;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color: var(--text);
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 28px 18px 40px; }
+    .topnav {
+      margin-bottom: 14px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(17, 24, 39, 0.8);
+    }
+    .topnav a {
+      color: var(--accent);
+      margin-right: 12px;
+      text-decoration: none;
+    }
+    .topnav a:hover { text-decoration: underline; }
+    .panel {
+      background: rgba(17, 24, 39, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+    h1, h2, h3 { color: var(--accent); margin-top: 1.5em; }
+    h1 { font-size: 1.875em; }
+    code {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+    }
+    pre {
+      background: rgba(0, 0, 0, 0.4);
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    a { color: var(--accent); }
+    a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="topnav"><a href="index.html">Docs Home</a><a href="README.html">Docs Index</a><a href="USAGE.html">Usage</a><a href="FULL_DOCUMENTATION.html">Full Docs</a><a href="ARCHITECTURE.html">Architecture</a><a href="ADAPTER_DEVELOPMENT.html">Adapter Dev</a><a href="CONTRIBUTING.html">Contributing</a><a href="CODE_OF_CONDUCT.html">Code of Conduct</a></nav>
+    <article class="panel">
+      <p><h1>Contributing Guide</h1></p>
+<p>Thanks for contributing to Aegis Monitor.</p>
+<p><h2>Ways to Contribute</h2></p>
 <ul>
 <li>Bug reports and issue triage</li>
 <li>New adapters and scoring methods</li>
@@ -8,54 +72,52 @@
 <li>Docs fixes and examples</li>
 <li>Performance and reliability improvements</li>
 </ul>
-<h2>Development Setup</h2>
-<pre><code>git clone https://github.com/aegis-ai/aegis-ai
-cd aegis-ai
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"</code></pre>
-<h2>Before You Start</h2>
-<ol>
-<li>Open an issue (or comment on an existing one).</li>
-<li>Describe scope and expected behavior.</li>
-<li>Keep PRs focused and small when possible.</li>
-</ol>
-<h2>Branching and Commits</h2>
+<p><h2>Development Setup</h2></p>
+<p><pre><code>git clone https://github.com/aegis-ai/aegis-ai</p>
+<p>cd aegis-ai</p>
+<p>python -m venv .venv</p>
+<p>source .venv/bin/activate</p>
+<p>pip install -e ".[dev]"</code></pre></p>
+<p><h2>Before You Start</h2></p>
+<p>1. Open an issue (or comment on an existing one).</p>
+<p>2. Describe scope and expected behavior.</p>
+<p>3. Keep PRs focused and small when possible.</p>
+<p><h2>Branching and Commits</h2></p>
 <ul>
 <li>Create a feature branch from <code>main</code>.</li>
 <li>Use clear commit messages.</li>
 <li>Keep each commit logically scoped.</li>
 </ul>
 <p>Suggested commit style:</p>
-<pre><code>feat: add adapter timeout retry support
-fix: correct cost aggregation for empty runs
-docs: expand usage guide for compare command
-test: add integration tests for baseline command</code></pre>
-<h2>Code Standards</h2>
+<p><pre><code>feat: add adapter timeout retry support</p>
+<p>fix: correct cost aggregation for empty runs</p>
+<p>docs: expand usage guide for compare command</p>
+<p>test: add integration tests for baseline command</code></pre></p>
+<p><h2>Code Standards</h2></p>
 <ul>
-<li>Python &gt;= 3.10</li>
+<li>Python >= 3.10</li>
 <li>Use type hints for public interfaces</li>
 <li>Prefer simple, explicit logic over cleverness</li>
 <li>Preserve existing patterns in this repository</li>
 <li>Add/update tests with behavioral changes</li>
 </ul>
-<h2>Quality Checks</h2>
+<p><h2>Quality Checks</h2></p>
 <p>Run these locally before opening a PR:</p>
-<pre><code>pytest -v
-ruff check .
-black --check .
-mypy aegis --ignore-missing-imports</code></pre>
+<p><pre><code>pytest -v</p>
+<p>ruff check .</p>
+<p>black --check .</p>
+<p>mypy aegis --ignore-missing-imports</code></pre></p>
 <p>If needed, format code:</p>
-<pre><code>black .
-ruff check . --fix</code></pre>
-<h2>Testing Expectations</h2>
+<p><pre><code>black .</p>
+<p>ruff check . --fix</code></pre></p>
+<p><h2>Testing Expectations</h2></p>
 <ul>
 <li>Add unit tests for new logic.</li>
 <li>Add integration tests when changing command flows.</li>
 <li>Do not break existing test behavior.</li>
 <li>Prefer deterministic tests (avoid live external API calls).</li>
 </ul>
-<h2>Documentation Expectations</h2>
+<p><h2>Documentation Expectations</h2></p>
 <p>Update docs when changing:</p>
 <ul>
 <li>CLI flags or command behavior</li>
@@ -64,7 +126,7 @@ ruff check . --fix</code></pre>
 <li>Cost/scoring output semantics</li>
 </ul>
 <p>Relevant docs are in <code>/docs</code>.</p>
-<h2>Pull Request Checklist</h2>
+<p><h2>Pull Request Checklist</h2></p>
 <ul>
 <li>[ ] Scope is clear and matches linked issue</li>
 <li>[ ] Code is formatted and linted</li>
@@ -73,14 +135,12 @@ ruff check . --fix</code></pre>
 <li>[ ] No secrets or credentials committed</li>
 <li>[ ] PR description explains what changed and why</li>
 </ul>
-<h2>Review and Merge Process</h2>
-<ol>
-<li>Automated checks must pass.</li>
-<li>At least one maintainer review.</li>
-<li>Address feedback with focused updates.</li>
-<li>Squash/merge according to maintainer preference.</li>
-</ol>
-<h2>Reporting Bugs</h2>
+<p><h2>Review and Merge Process</h2></p>
+<p>1. Automated checks must pass.</p>
+<p>2. At least one maintainer review.</p>
+<p>3. Address feedback with focused updates.</p>
+<p>4. Squash/merge according to maintainer preference.</p>
+<p><h2>Reporting Bugs</h2></p>
 <p>Include:</p>
 <ul>
 <li>Environment (OS, Python version)</li>
@@ -90,8 +150,12 @@ ruff check . --fix</code></pre>
 <li>Logs/error trace</li>
 <li>Minimal repro dataset or command</li>
 </ul>
-<h2>Security Issues</h2>
+<p><h2>Security Issues</h2></p>
 <p>Do not open public issues for sensitive vulnerabilities.</p>
 <p>Contact maintainers privately through repository security channels.</p>
-<h2>License</h2>
-<p>By contributing, you agree that your contributions are licensed under the project’s MIT license.</p></article></main></body></html>
+<p><h2>License</h2></p>
+<p>By contributing, you agree that your contributions are licensed under the project’s MIT license.</p>
+    </article>
+  </main>
+</body>
+</html>
