@@ -5,11 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "aegis-monitor"
 version = "0.1.0"
-description = "Python library for LLM evaluation, observability, and cost monitoring. It helps teams measure model quality, track prompt performance, detect regressions, and monitor real-time 
-token usage and spending across providers like OpenAI, Anthropic, and Google.
-
-The library provides structured experiment tracking, automated benchmark evaluation, hallucination and bias scoring, latency monitoring, and budget enforcement—all in one lightweight SDK. Aegis-AI integrates seamlessly into existing ML pipelines and CI/CD workflows, 
-enabling teams to ship AI systems that are measurable, reliable, and financially predictable."
+description = "Python library for LLM evaluation, observability, and cost monitoring with regression detection and budget-aware workflows."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
